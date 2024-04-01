@@ -1,0 +1,60 @@
+package com.viettel.vai.crawler.service;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+@Slf4j
+public class NewCrawlerService {
+    
+    @Data
+    static class QueueElement {
+        String url;
+        String type;
+    }
+    private Queue<QueueElement> workQueue = new LinkedList<>();
+    
+    public void startWorking(){
+        // Start n thread xu ly
+        // Moi thread lam nhiem vu: 
+        // b1: Lay 1 phan tu tu workQueue
+        // b2: Download & xu ly theo type
+        for (int i = 0 ; i < 10; i++){
+            new Thread(new CrawlerWorker()).start();
+        }
+    }
+    
+    class CrawlerWorker extends Thread{
+        @Override
+        public void run() {
+            while (true){
+                try {
+                    if (workQueue.isEmpty()) {
+                        Thread.sleep(100);
+                        continue;
+                    }
+                    if (!workQueue.isEmpty()) {
+                        QueueElement job = workQueue.poll();
+                        if (job != null){
+                            
+                            if (job.type.equalsIgnoreCase("HOME_PAGE")) {
+                                // Xu ly
+                                // Push nguoc cai category vao queue
+                            } else if (job.type.equalsIgnoreCase("CATEGORY")) {
+                                // Xu ly
+                                // Push nguoc bai co type la ARTICLE vao queue
+                            } else  if (job.type.equalsIgnoreCase("ARTICLE")){
+                                // Xu ly
+                                // Ghi output ra ngoai
+                            }
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
